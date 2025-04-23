@@ -25,9 +25,9 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
 ```
 
-4. Abhängigkeiten installieren:
+4. Projekt im Entwicklungsmodus installieren:
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Entwicklung
@@ -37,6 +37,17 @@ pip install -r requirements.txt
 - `src/frontend/`: Frontend-Komponenten
 - `src/models/`: Datenmodelle
 - `src/utils/`: Hilfsfunktionen
+
+## Server starten
+
+1. Backend starten:
+```bash
+cd src
+uvicorn api.main:app --reload
+```
+
+2. Frontend öffnen:
+- Öffnen Sie `src/frontend/index.html` in einem Webbrowser
 
 ## Tests
 

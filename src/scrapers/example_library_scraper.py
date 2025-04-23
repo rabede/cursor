@@ -1,7 +1,7 @@
 from typing import List, Dict, Any
 from bs4 import BeautifulSoup
 import asyncio
-from .base_scraper import BaseScraper
+from scrapers.base_scraper import BaseScraper
 
 class ExampleLibraryScraper(BaseScraper):
     def __init__(self):

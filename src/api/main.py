@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from .models import SearchRequest, SearchResponse, BookMetadata
-from ..scrapers.example_library_scraper import ExampleLibraryScraper
+from api.models import SearchRequest, SearchResponse, BookMetadata
+from scrapers.example_library_scraper import ExampleLibraryScraper
+from scrapers.noworzyn_scraper import NoworzynScraper
 import asyncio
 from typing import Dict, Type
-from ..scrapers.base_scraper import BaseScraper
+from scrapers.base_scraper import BaseScraper
 
 app = FastAPI(
     title="Bibliotheksübergreifendes Suchsystem",
@@ -24,6 +25,7 @@ app.add_middleware(
 # Registry für verfügbare Bibliotheks-Scraper
 LIBRARY_SCRAPERS: Dict[str, Type[BaseScraper]] = {
     "example_library": ExampleLibraryScraper,
+    "noworzyn": NoworzynScraper,
 }
 
 @app.post("/search", response_model=SearchResponse)
