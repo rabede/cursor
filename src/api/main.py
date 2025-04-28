@@ -1,8 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+import os
 from api.models import SearchRequest, SearchResponse, BookMetadata
 from scrapers.example_library_scraper import ExampleLibraryScraper
 from scrapers.noworzyn_scraper import NoworzynScraper
+from scrapers.onleihe_koeln_scraper import OnleiheKoelnScraper
 import asyncio
 from typing import Dict, Type
 from scrapers.base_scraper import BaseScraper
@@ -12,6 +16,10 @@ app = FastAPI(
     description="API für die parallele Suche in mehreren Bibliothekskatalogen",
     version="1.0.0"
 )
+
+# Mount the frontend directory for static file serving
+frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
+app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
 # CORS-Middleware für Frontend-Zugriff
 app.add_middleware(
@@ -26,7 +34,16 @@ app.add_middleware(
 LIBRARY_SCRAPERS: Dict[str, Type[BaseScraper]] = {
     "example_library": ExampleLibraryScraper,
     "noworzyn": NoworzynScraper,
+    "onleihe_koeln": OnleiheKoelnScraper,
 }
+
+@app.get("/")
+async def root():
+    """
+    Serves the frontend application.
+    """
+    frontend_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend", "index.html")
+    return FileResponse(frontend_path)
 
 @app.post("/search", response_model=SearchResponse)
 async def search(request: SearchRequest):
